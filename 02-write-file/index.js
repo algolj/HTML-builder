@@ -10,7 +10,7 @@ const consoleReader = readLine.createInterface({
 
 // Checks if text.txt exists in the folder.
 // If it is not there, creates it.
-fs.access(PATH, fs.F_OK, (err) => {
+fs.access(PATH, fs.constants.F_OK, (err) => {
   if (err) {
     fs.open(PATH, 'w', (err) => console.error(err));
   }
