@@ -3,29 +3,48 @@ const way = './04-copy-directory';
 const dir = 'files';
 const discrim = '-copy';
 
-(function copyDir(WAY = way, DIR = dir, DISCRIM = discrim) {
+copyDir();
+
+async function copyDir(WAY = way, DIR = dir, DISCRIM = discrim) {
   // Check the existence of the copied folder and the folder to
   // save the copy to the current addresses. If the copied folder
   // does not exist at the address, we will issue an error, if there
   // is no folder to save, we will create it
-  [DIR, DIR + DISCRIM].forEach((el) => {
-    fs.access(`${WAY}/${el}`, fs.constants.F_OK, (err) => {
+  await [DIR, DIR + DISCRIM].forEach(async (el) => {
+    await fs.access(`${WAY}/${el}`, fs.constants.F_OK, async (err) => {
       if (err) {
         if (!el.includes(DISCRIM)) {
           console.log(err);
         } else {
-          // create a folder to copys
-          fs.mkdir(`${WAY}/${el}`, { recursive: true }, (err) =>
-            console.log(err)
-          );
+          // we call the function of creating a folder for copying
+          // and copy files from the main folder into it
+          await makeCopy(WAY, DIR, DISCRIM);
+        }
+      } else {
+        if (el.includes(DISCRIM)) {
+          // delete the old copied folder
+          await fs.promises
+            .rm(`${WAY}/${el}`, { recursive: true })
+            .then(() => {});
+          // we call the function of creating a folder for copying
+          // and copy files from the main folder into it
+          await makeCopy(WAY, DIR, DISCRIM);
         }
       }
     });
   });
+}
 
+// the function of creating a folder for copying
+// and copy files from the main folder into it
+async function makeCopy(WAY, DIR, DISCRIM) {
+  // create a folder to copys
+  await fs.mkdir(`${WAY}/${DIR + DISCRIM}`, { recursive: true }, (err) =>
+    console.log(err)
+  );
   // copy files from copy folder to new
-  copyFilesInFolder(`${WAY}/${DIR}`, `${WAY}/${DIR + DISCRIM}`);
-})();
+  await copyFilesInFolder(`${WAY}/${DIR}`, `${WAY}/${DIR + DISCRIM}`);
+}
 
 // function to copy files from a folder at 'copied Folder'
 // to a folder at 'newFolder'

@@ -23,7 +23,7 @@ fs.access(PATH, fs.constants.F_OK, (err) => {
 (function writeText() {
   consoleReader.question('Write text:', (answer) => {
     if (answer.toLowerCase() == 'exit') {
-      consoleReader.close();
+      farewellPhrase();
     } else {
       fs.appendFile(PATH, answer + '\n', (err) =>
         err ? console.error(err) : writeText()
@@ -31,3 +31,14 @@ fs.access(PATH, fs.constants.F_OK, (err) => {
     }
   });
 })();
+
+// Listening for interruption of input execution
+consoleReader.on('SIGINT', () => {
+  farewellPhrase();
+});
+
+// Outputting a farewell phrase and interrupting input
+function farewellPhrase() {
+  console.log('\nGoodbye');
+  consoleReader.close();
+}
