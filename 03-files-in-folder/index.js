@@ -22,7 +22,7 @@ const way = './03-files-in-folder/secret-folder';
         // If it is a directory, then we display
         // information about the files in it
         if (stats.isDirectory()) {
-          readerDir(WAY + '/' + file);
+          // readerDir(WAY + '/' + file);
         } else {
           // if the element is a file, display its name,
           // extension and size
